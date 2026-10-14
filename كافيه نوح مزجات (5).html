@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>كافيه نوح مزجات</title>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1c120b;--card:#2a1c12;--line:#5a4020;--gold:#e8ae3e;--text:#f4e8d2;--mute:#b9a584;--on-gold:#1c120b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fbf4e6;--card:#fff;--line:#e0c895;--gold:#9a5f0e;--text:#2b1a0d;--mute:#7a6548;--on-gold:#fff}}
+:root[data-theme="light"]{--bg:#fbf4e6;--card:#fff;--line:#e0c895;--gold:#9a5f0e;--text:#2b1a0d;--mute:#7a6548;--on-gold:#fff}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Cairo,Tahoma,sans-serif;padding-bottom:90px}
+header{text-align:center;padding:36px 20px 24px;border-bottom:1px solid var(--line)}
+.tag{color:var(--mute);font-size:14px;margin:0}
+h1{font-family:'Reem Kufi',Tahoma,serif;color:var(--gold);font-size:clamp(44px,14vw,72px);line-height:1.1;margin:6px 0 4px}
+.sub{font-size:15px;color:var(--mute);margin:0 0 14px}
+.slogan{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 18px;font-weight:600}
+main{max-width:640px;margin:0 auto;padding:20px 16px}
+h2{font-family:'Reem Kufi',Tahoma,serif;font-size:24px;margin:8px 0 14px}
+.item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.ico{font-size:34px;width:48px;text-align:center}
+.info{flex:1}
+.name{font-weight:700;font-size:18px}
+.price{color:var(--gold);font-weight:600}
+.qty{display:flex;align-items:center;gap:10px}
+button{font-family:inherit;cursor:pointer}
+.qty button{width:36px;height:36px;border-radius:50%;border:1px solid var(--gold);background:none;color:var(--gold);font-size:20px}
+.qty span{min-width:20px;text-align:center;font-weight:700}
+.bar{position:fixed;inset-inline:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:center}
+.bar>*{flex:1;max-width:300px;text-align:center;padding:12px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:0}
+.order{background:var(--gold);color:var(--on-gold)}
+.order:disabled{opacity:.45}
+.call{border:1px solid var(--gold)!important;color:var(--gold);background:none}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:10px 16px 30px}
+.note{width:100%;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:inherit;font-size:16px;margin-top:6px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <p class="tag">كافيه</p>
+  <h1>نوح مزجات</h1>
+  <p class="sub">إدارة محمد مزجات</p>
+  <span class="slogan">مزجات تشبه مزاجك</span>
+</header>
+<main>
+  <h2>المنيو</h2>
+  <div id="menu"></div>
+  <h2>ملاحظات على الطلب</h2>
+  <textarea id="note" class="note" rows="2" placeholder="مثال: سكر زيادة، من غير سكر، الاسم أو رقم الترابيزة"></textarea>
+</main>
+<footer>للطلب والاستفسار: 01203027865</footer>
+<div class="bar">
+  <button class="order" id="order" disabled>اطلب واتساب</button>
+  <a class="call" href="tel:01203027865">اتصل بنا</a>
+</div>
+<script>
+// عدّل الأسعار من هنا (أسعار تجريبية)
+var ITEMS=[
+ {n:"شاي",p:7.5,i:"🍵"},
+ {n:"كركديه",p:7.5,i:"🌺"},
+ {n:"زنجبيل",p:7.5,i:"🫚"},
+ {n:"حلبة",p:7.5,i:"🌾"},
+ {n:"أنيسون",p:7.5,i:"🌿"},
+ {n:"قهوة",p:10,i:"☕"},
+ {n:"شيشة تفاح",p:25,i:"💨"},
+ {n:"شيشة فواكه",p:25,i:"💨"},
+ {n:"حجر شيشة",p:7.5,i:"🔥"}
+];
+var cart=ITEMS.map(function(){return 0});
+var menu=document.getElementById('menu'),btn=document.getElementById('order');
+function render(){
+  menu.innerHTML=ITEMS.map(function(x,k){
+    return '<div class="item"><div class="ico">'+x.i+'</div><div class="info"><div class="name">'+x.n+'</div><div class="price">'+x.p+' جنيه</div></div>'+
+    '<div class="qty"><button data-k="'+k+'" data-d="-1" aria-label="إنقاص">−</button><span>'+cart[k]+'</span><button data-k="'+k+'" data-d="1" aria-label="زيادة">+</button></div></div>';
+  }).join('');
+  var t=0,c=0;cart.forEach(function(q,k){t+=q*ITEMS[k].p;c+=q});
+  btn.disabled=!c;
+  btn.textContent=c?('اطلب واتساب ('+t+' جنيه)'):'اطلب واتساب';
+}
+menu.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  var k=+b.dataset.k;cart[k]=Math.max(0,cart[k]+ +b.dataset.d);render();
+});
+btn.addEventListener('click',function(){
+  var lines=[],t=0;
+  cart.forEach(function(q,k){if(q){lines.push(q+' × '+ITEMS[k].n);t+=q*ITEMS[k].p}});
+  var note=document.getElementById('note').value.trim();
+  var msg='طلب جديد من كافيه نوح مزجات:\n'+lines.join('\n')+'\nالإجمالي: '+t+' جنيه'+(note?'\nملاحظات: '+note:'');
+  window.open('https://wa.me/201203027865?text='+encodeURIComponent(msg),'_blank');
+});
+render();
+</script>
+</body>
+</html>
